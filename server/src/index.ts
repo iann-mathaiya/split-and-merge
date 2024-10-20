@@ -50,8 +50,6 @@ app.post('/split', uploadMiddleware, async (c) => {
     const file = body.pdf as File
     const pageRanges = body.pageRanges as string
 
-    const filename = file.name
-
     if (!file) {
       return c.json({
         success: false, error: 'No PDF file provided'
@@ -108,33 +106,38 @@ app.post('/split', uploadMiddleware, async (c) => {
 
 
 // Merge PDFs endpoint
-// app.post('/merge', uploadMiddleware, async (c) => {
-//   try {
-//     const files = c.req.parseBody()
-//     if (!files?.pdfs) {
-//       return c.json({ error: 'No PDF files provided' }, 400)
-//     }
+app.post('/merge', uploadMiddleware, async (c) => {
+  try {
+    const formData = await c.req.formData()
+    const pdfFiles = formData.getAll('pdfs')
 
-//     // Create merged PDF
-//     const mergedPdf = await PDFDocument.create()
+    if (!pdfFiles.length) {
+      return c.json({ success: false, error: 'No PDF files provided' }, 400)
+    }
 
-//     for (const file of files.pdfs) {
-//       const pdf = await PDFDocument.load(file.buffer)
-//       const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
-//       pages.forEach(page => mergedPdf.addPage(page))
-//     }
+    // Create merged PDF
+    const mergedPdf = await PDFDocument.create()
 
-//     const mergedPdfBytes = await mergedPdf.save()
+    for (const file of pdfFiles) {
+      const pdfBytes = await file.arrayBuffer()
+      const pdf = await PDFDocument.load(pdfBytes)
+      const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
+      pages.forEach(page => mergedPdf.addPage(page))
+    }
 
-//     c.header('Content-Type', 'application/pdf')
-//     c.header('Content-Disposition', 'attachment; filename=merged.pdf')
+    const mergedPdfBytes = await mergedPdf.save()
 
-//     return new Response(mergedPdfBytes)
+    return new Response(mergedPdfBytes, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="merged.pdf"'
+      }
+    })
 
-//   } catch (error) {
-//     return c.json({ error: error.message }, 500)
-//   }
-// })
+  } catch (error: any) {
+    return c.json({ error: error.message }, 500)
+  }
+})
 
 const port = 3000
 console.log(`Server is running on port ${port}`)

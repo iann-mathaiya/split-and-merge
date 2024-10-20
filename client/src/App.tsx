@@ -13,7 +13,7 @@ const PDFProcessor = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [downloadLink, setDownloadLink] = useState('')
-  const [zipFileName, setZipFileName] = useState('')
+  const [docFileName, setDocFileName] = useState('')
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || [])
@@ -75,11 +75,11 @@ const PDFProcessor = () => {
         body: formData,
       })
 
-      const zip = await response.blob()
+      const reponseData = await response.blob()
 
-      const url = window.URL.createObjectURL(zip)
+      const url = window.URL.createObjectURL(reponseData)
       setDownloadLink(url)
-      setZipFileName(`${fileName}.zip`)
+      mode === 'split' ? setDocFileName(`${fileName}.zip`) : setDocFileName(fileName)
 
       setSuccess(`${fileName} ${mode === 'split' ? 'split' : 'merged'} successfully!`)
       setFiles([])
@@ -132,8 +132,8 @@ const PDFProcessor = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-          <label className="cursor-pointer block">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg text-center">
+          <label className="cursor-pointer block p-6">
             <input
               type="file"
               accept="application/pdf"
@@ -200,7 +200,7 @@ const PDFProcessor = () => {
             <AlertTitle>Success</AlertTitle>
             <AlertDescription>{success}</AlertDescription>
             <div className='pt-4'>
-              <a href={downloadLink} download={zipFileName} className='text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
+              <a href={downloadLink} download={docFileName} className='text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
                 Download Zip File</a>
             </div>
           </Alert>
