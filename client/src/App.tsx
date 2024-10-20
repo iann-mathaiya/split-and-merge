@@ -2,10 +2,6 @@ import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { Upload, FileText, Scissors, Merge, Loader2 } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from './components/alert'
-import axios, { AxiosError } from 'axios'
-import { saveAs } from 'file-saver'
-import { PDFDocument } from 'pdf-lib'
-import JSZip from 'jszip'
 
 const API_URL = import.meta.env.API_URL || 'http://localhost:3000'
 
