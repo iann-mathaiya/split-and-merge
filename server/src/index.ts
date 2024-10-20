@@ -109,7 +109,7 @@ app.post('/split', uploadMiddleware, async (c) => {
 app.post('/merge', uploadMiddleware, async (c) => {
   try {
     const formData = await c.req.formData()
-    const pdfFiles = formData.getAll('pdfs')
+    const pdfFiles = formData.getAll('pdfs') as File[]
 
     if (!pdfFiles.length) {
       return c.json({ success: false, error: 'No PDF files provided' }, 400)
