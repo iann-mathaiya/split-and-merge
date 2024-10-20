@@ -87,7 +87,7 @@ app.post('/split', uploadMiddleware, async (c) => {
     const zip = new JSZip()
     splitPDFs.forEach((pdf, i) => {
       const [start, end] = ranges[i]
-      zip.file(`page-${start + 1}-of-${totalPages}.pdf`, pdf)
+      zip.file(`page-${start + 1}.pdf`, pdf)
     })
 
     const zipContent = await zip.generateAsync({ type: 'arraybuffer' })

@@ -13,6 +13,7 @@ const PDFProcessor = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [downloadLink, setDownloadLink] = useState('')
+  const [zipFileName, setZipFileName] = useState('')
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || [])
@@ -66,7 +67,8 @@ const PDFProcessor = () => {
         }
       }
 
-      const fileName = mode === 'split' ? 'split_pdfs.zip' : 'merged.pdf'
+      // const fileName = mode === 'split' ? 'split_pdfs.zip' : 'merged.pdf'
+      const fileName = files[0].name
 
       const response = await fetch(`${API_URL}/${mode}`, {
         method: 'POST',
@@ -77,8 +79,9 @@ const PDFProcessor = () => {
 
       const url = window.URL.createObjectURL(zip)
       setDownloadLink(url)
+      setZipFileName(`${fileName}.zip`)
 
-      setSuccess(`PDF ${fileName} ${mode === 'split' ? 'split' : 'merged'} successfully!`)
+      setSuccess(`${fileName} ${mode === 'split' ? 'split' : 'merged'} successfully!`)
       setFiles([])
       setPageRanges('')
 
@@ -196,7 +199,10 @@ const PDFProcessor = () => {
           <Alert className="bg-green-50 text-green-900 border-green-200">
             <AlertTitle>Success</AlertTitle>
             <AlertDescription>{success}</AlertDescription>
-            <a href={downloadLink} download>Download Zip File</a>
+            <div className='pt-4'>
+              <a href={downloadLink} download={zipFileName} className='text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
+                Download Zip File</a>
+            </div>
           </Alert>
         )}
 
