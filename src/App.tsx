@@ -159,8 +159,8 @@ const PDFProcessor = () => {
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="font-medium mb-2">Selected Files:</h3>
             <ul className="space-y-2">
-              {files.map((file, index) => (
-                <li key={index} className="flex items-center text-sm">
+              {files.map((file) => (
+                <li key={file.name} className="flex items-center text-sm">
                   <FileText className="w-4 h-4 mr-2 text-gray-500" />
                   {file.name}
                 </li>

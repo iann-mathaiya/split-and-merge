@@ -64,7 +64,7 @@ app.post('/split', uploadMiddleware, async (c) => {
     let ranges = []
     if (pageRanges) {
       ranges = pageRanges.split(',').map(range => {
-        const [start, end] = range.split('-').map(num => parseInt(num))
+        const [start, end] = range.split('-').map(num => Number.parseInt(num))
         return [start, end]
       })
     } else {
