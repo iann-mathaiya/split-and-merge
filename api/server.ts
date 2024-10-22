@@ -1,13 +1,26 @@
 import JSZip from 'jszip'
 import multer from 'multer'
 import { Hono } from 'hono'
+import path from 'node:path'
+import { zerox } from 'zerox'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { PDFDocument } from 'pdf-lib'
 import { serve } from '@hono/node-server'
 import type { Context, Next } from 'hono'
+import type { ModelOptions } from 'zerox/node-zerox/dist/types'
 
 const app = new Hono()
+
+const result = await zerox({
+  filePath: path.resolve(__dirname, "./cs101.pdf"),
+  openaiAPIKey: process.env.OPENAI_API_KEY,
+  cleanup: true,
+  concurrency: 20,
+  maintainFormat: true,
+  outputDir: undefined,
+  model: 'gpt-4o-mini' as ModelOptions,
+});
 
 const upload = multer({
   dest: 'uploads/',
@@ -44,7 +57,7 @@ app.get('/', (c) => {
 })
 
 // Split PDF endpoint
-app.post('/split', uploadMiddleware, async (c) => {
+app.post('/split', async (c) => {
   try {
     const body = await c.req.parseBody()
     const file = body.pdf as File
@@ -61,7 +74,7 @@ app.post('/split', uploadMiddleware, async (c) => {
     const totalPages = pdfDoc.getPageCount()
 
     // Parse page ranges or default to individual pages
-    let ranges = []
+    let ranges: number[][] = []
     if (pageRanges) {
       ranges = pageRanges.split(',').map(range => {
         const [start, end] = range.split('-').map(num => Number.parseInt(num))
@@ -77,7 +90,10 @@ app.post('/split', uploadMiddleware, async (c) => {
       const pages = await newPdf.copyPages(pdfDoc,
         Array.from({ length: end - start + 1 }, (_, i) => start + i))
 
-      pages.forEach(page => newPdf.addPage(page))
+        for (const page of pages) {
+          newPdf.addPage(page)
+        }
+
       return newPdf.save()
     }))
 
@@ -106,7 +122,7 @@ app.post('/split', uploadMiddleware, async (c) => {
 
 
 // Merge PDFs endpoint
-app.post('/merge', uploadMiddleware, async (c) => {
+app.post('/merge', async (c) => {
   try {
     const formData = await c.req.formData()
     const pdfFiles = formData.getAll('pdfs') as File[]
@@ -122,7 +138,10 @@ app.post('/merge', uploadMiddleware, async (c) => {
       const pdfBytes = await file.arrayBuffer()
       const pdf = await PDFDocument.load(pdfBytes)
       const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
-      pages.forEach(page => mergedPdf.addPage(page))
+
+      for (const page of pages) {
+        mergedPdf.addPage(page)
+      }
     }
 
     const mergedPdfBytes = await mergedPdf.save()
