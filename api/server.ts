@@ -12,15 +12,20 @@ import type { ModelOptions } from 'zerox/node-zerox/dist/types'
 
 const app = new Hono()
 
-const result = await zerox({
-  filePath: path.resolve(__dirname, "./cs101.pdf"),
-  openaiAPIKey: process.env.OPENAI_API_KEY,
-  cleanup: true,
-  concurrency: 20,
-  maintainFormat: true,
-  outputDir: undefined,
-  model: 'gpt-4o-mini' as ModelOptions,
-});
+async function runOCR(filePath: string) {
+  const result = await zerox({
+    filePath: path.resolve(__dirname, filePath),
+    openaiAPIKey: process.env.OPENAI_API_KEY,
+    cleanup: true,
+    concurrency: 20,
+    maintainFormat: true,
+    outputDir: undefined,
+    model: 'gpt-4o-mini' as ModelOptions,
+  })
+
+  return result
+}
+
 
 const upload = multer({
   dest: 'uploads/',
@@ -90,9 +95,9 @@ app.post('/split', async (c) => {
       const pages = await newPdf.copyPages(pdfDoc,
         Array.from({ length: end - start + 1 }, (_, i) => start + i))
 
-        for (const page of pages) {
-          newPdf.addPage(page)
-        }
+      for (const page of pages) {
+        newPdf.addPage(page)
+      }
 
       return newPdf.save()
     }))
