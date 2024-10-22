@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
-import { Upload, FileText, Scissors, Merge, Loader2 } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from './components/alert'
+import { Upload, FileText, Scissors, Merge, Loader2 } from 'lucide-react'
 
 const API_URL = import.meta.env.API_URL || 'http://localhost:3000'
 
@@ -85,7 +85,7 @@ const PDFProcessor = () => {
       setFiles([])
       setPageRanges('')
 
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message || 'An error occurred')
     } finally {
       setLoading(false)

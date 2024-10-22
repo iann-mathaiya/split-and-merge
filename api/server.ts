@@ -8,7 +8,9 @@ import { logger } from 'hono/logger'
 import { PDFDocument } from 'pdf-lib'
 import { serve } from '@hono/node-server'
 import type { Context, Next } from 'hono'
+import type { HTTPResponseError } from 'hono/types'
 import type { ModelOptions } from 'zerox/node-zerox/dist/types'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 
 const app = new Hono()
 
@@ -42,11 +44,11 @@ const handleUpload = upload.fields([
 // Convert multer middleware to Hono middleware
 const uploadMiddleware = async (c: Context, next: Next) => {
 
-  const req = c.req.raw as any
-  const res = c.res as any
+  const req = c.req.raw as unknown as IncomingMessage
+  const res = c.res as unknown as ServerResponse
 
   return new Promise((resolve, reject) => {
-    handleUpload(req, res, (err) => {
+    handleUpload(req, res, (err?: HTTPResponseError) => {
       if (err) reject(err)
       else resolve(next())
     })
@@ -117,7 +119,7 @@ app.post('/split', async (c) => {
         'Content-Disposition': 'attachment; filename="split_pdfs.zip"'
       }
     })
-  } catch (error: any) {
+  } catch (error) {
     return c.json({
       success: false,
       error: error.message
@@ -158,7 +160,7 @@ app.post('/merge', async (c) => {
       }
     })
 
-  } catch (error: any) {
+  } catch (error) {
     return c.json({ error: error.message }, 500)
   }
 })
