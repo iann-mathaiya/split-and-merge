@@ -1,33 +1,15 @@
 import JSZip from 'jszip'
 import multer from 'multer'
 import { Hono } from 'hono'
-import path from 'node:path'
-import { zerox } from 'zerox'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { PDFDocument } from 'pdf-lib'
 import { serve } from '@hono/node-server'
 import type { Context, Next } from 'hono'
 import type { HTTPResponseError } from 'hono/types'
-import type { ModelOptions } from 'zerox/node-zerox/dist/types'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 
 const app = new Hono()
-
-async function runOCR(filePath: string) {
-  const result = await zerox({
-    filePath: path.resolve(__dirname, filePath),
-    openaiAPIKey: process.env.OPENAI_API_KEY,
-    cleanup: true,
-    concurrency: 20,
-    maintainFormat: true,
-    outputDir: undefined,
-    model: 'gpt-4o-mini' as ModelOptions,
-  })
-
-  return result
-}
-
 
 const upload = multer({
   dest: 'uploads/',
