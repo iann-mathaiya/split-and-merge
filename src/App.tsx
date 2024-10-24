@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
-import { Upload, FileText, Scissors, Merge, Loader2 } from 'lucide-react'
+import { Upload, FileText, Loader2 } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs'
 
@@ -8,25 +8,27 @@ const API_URL = import.meta.env.API_URL || 'http://localhost:3000'
 
 export default function App() {
   return (
-    <section className='mt-4 sm:mt-8 w-full max-w-screen-sm mx-auto'>
+    <section className='p-2 bg-white min-h-screen border border-gray-200 rounded-xl shadow-md'>
 
-      <h1 className='text-2xl text-gray-950 font-semibold text-start'>Split & Merge then OCR</h1>
+      {/* <h1 className='text-2xl text-gray-950 font-semibold text-start'>Split & Merge then OCR</h1> */}
 
-      <Tabs defaultValue="split" className="mt-4">
+      <Tabs defaultValue="split" className="p-1 w-full max-w-sm bg-gray-100 rounded-lg">
         <TabsList>
-          <TabsTrigger value="split">Split</TabsTrigger>
-          <TabsTrigger value="merge">Merge</TabsTrigger>
-          <TabsTrigger value="ocr">OCR</TabsTrigger>
+          <TabsTrigger value="split"> <span>✂</span>  Split</TabsTrigger>
+          <TabsTrigger value="merge"><span>🍯</span> Merge</TabsTrigger>
+          <TabsTrigger value="ocr"><span>📜</span>OCR</TabsTrigger>
         </TabsList>
-        <TabsContent value="split" className='pt-12'>
-          <SplitPDF />
-        </TabsContent>
-        <TabsContent value="merge" className='pt-12'>
-          <MergePDFs />
-        </TabsContent>
-        <TabsContent value="ocr">
-          Todo
-        </TabsContent>
+        <div className='mt-1 bg-white p-2 rounded-md'>
+          <TabsContent value="split" className='pt-12'>
+            <SplitPDF />
+          </TabsContent>
+          <TabsContent value="merge" className='pt-12'>
+            <MergePDFs />
+          </TabsContent>
+          <TabsContent value="ocr">
+            Todo
+          </TabsContent>
+        </div>
       </Tabs>
     </section>
   )
