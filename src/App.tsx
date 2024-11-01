@@ -41,7 +41,7 @@ function SplitPDF() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [downloadLink, setDownloadLink] = useState('')
-  const [docFileName, setDocFileName] = useState('')
+  const [zipFileName, setZipFileName] = useState('')
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || [])
@@ -99,7 +99,6 @@ function SplitPDF() {
 
       const url = window.URL.createObjectURL(reponseData)
       setDownloadLink(url)
-      setDocFileName(`${fileName}.zip`)
 
       setSuccess(`${fileName} split successfully!`)
       setFiles([])
@@ -146,6 +145,12 @@ function SplitPDF() {
       )}
 
       <div>
+        <label htmlFor='file-name' className='text-sm text-gray-900'>File name</label>
+        <input id='file-name' value={zipFileName} onChange={e => setZipFileName(e.target.value)} placeholder='Assign file name' required
+          className='mt-1 px-2.5 py-1.5 w-full text-sm border border-gray-200 rounded-md' />
+      </div>
+
+      <div>
         <label htmlFor='upload-file' className="block text-sm font-medium text-gray-700 mb-1">
           Page Ranges (optional)
         </label>
@@ -174,7 +179,7 @@ function SplitPDF() {
           <AlertTitle>Success</AlertTitle>
           <AlertDescription>{success}</AlertDescription>
           <div className='pt-4'>
-            <a href={downloadLink} download={docFileName} className='text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
+            <a href={downloadLink} download={zipFileName} className='text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
               Download Zip File</a>
           </div>
         </Alert>
@@ -202,7 +207,7 @@ function MergePDFs() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [downloadLink, setDownloadLink] = useState('')
-  const [docFileName, setDocFileName] = useState('')
+  const [mergedDocFileName, setMergedDocFileName] = useState('')
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || [])
@@ -237,8 +242,6 @@ function MergePDFs() {
         formData.append('pdfs', file)
       }
 
-      const fileName = files[0].name
-
       const response = await fetch(`${API_URL}/merge`, {
         method: 'POST',
         body: formData,
@@ -248,7 +251,6 @@ function MergePDFs() {
 
       const url = window.URL.createObjectURL(reponseData)
       setDownloadLink(url)
-      setDocFileName(fileName)
 
       setSuccess('Merged successfully')
       setFiles([])
@@ -283,6 +285,12 @@ function MergePDFs() {
         </label>
       </div>
 
+      <div>
+        <label htmlFor='file-name' className='text-sm text-gray-900'>File name</label>
+        <input id='file-name' value={mergedDocFileName} onChange={e => setMergedDocFileName(e.target.value)} placeholder='Assign file name' required
+          className='mt-1 px-2.5 py-1.5 w-full text-sm border border-gray-200 rounded-md' />
+      </div>
+
       {files.length > 0 && (
         <div className="bg-gray-50 p-4 rounded-lg">
           <h3 className="font-medium mb-2">Selected Files:</h3>
@@ -309,7 +317,7 @@ function MergePDFs() {
           <AlertTitle>Success</AlertTitle>
           <AlertDescription>{success}</AlertDescription>
           <div className='pt-4'>
-            <a href={downloadLink} download={docFileName} className='text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
+            <a href={downloadLink} download={mergedDocFileName} className='text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
               Download Zip File</a>
           </div>
         </Alert>
@@ -317,7 +325,7 @@ function MergePDFs() {
 
       <button
         type="submit"
-        disabled={loading || files.length === 0}
+        disabled={loading || (files.length === 0 && mergedDocFileName === "")}
         className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center"
       >
         {loading ? (
