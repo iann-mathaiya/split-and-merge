@@ -184,12 +184,17 @@ function SplitPDF() {
           className="mt-16 flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
         >
           {loading ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            <>
+              <span>splitting {files[0]?.name}</span>
+              <div className="p-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
+                <Loader2 className="w-4 h-4 text-whte animate-spin" aria-hidden />
+              </div>
+            </>
           ) : (
             <>
               <span>when you're ready go ahead and</span>
               <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
-                <ScissorsIcon className="w-3.5 h-3.5" />
+                <ScissorsIcon className="w-3.5 h-3.5 text-whte" aria-hidden />
                 <span>split</span>
               </div>
             </>
@@ -199,12 +204,12 @@ function SplitPDF() {
 
 
       {error && (
-       <div className="mt-12">
-         <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-       </div>
+        <div className="mt-12">
+          <Alert variant="destructive">
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        </div>
       )}
 
       {success && (
