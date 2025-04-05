@@ -147,7 +147,7 @@ app.post('/merge', async (c) => {
   }
 })
 
-const port = 3000
+const port = 3001
 console.log(`Server is running on port ${port}`)
 
 serve({
