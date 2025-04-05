@@ -128,9 +128,10 @@ function SplitPDF() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="border-2 border-dashed border-zinc-300 rounded-lg text-center">
+    <form onSubmit={handleSubmit} className="space-y-2.5 text-base text-zinc-600 lowercase">
+      {/* <div className="border-2 border-dashed border-zinc-300 rounded-lg text-center">
         <label className="cursor-pointer block p-6">
+          upload the document
           <input
             type="file"
             accept="application/pdf"
@@ -144,26 +145,34 @@ function SplitPDF() {
             </span>
           </div>
         </label>
-      </div>
-
-      {files.length > 0 && (
-        <div className="bg-zinc-50 p-4 rounded-lg">
-          <h3 className="font-medium mb-2">Selected Files:</h3>
-          <ul className="space-y-2">
-            {files.map((file) => (
-              <li key={file.name} className="flex items-center text-sm">
-                <FileText className="w-4 h-4 mr-2 text-zinc-500" />
-                {file.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      </div> */}
 
       <div>
-        <label htmlFor='file-name' className='text-sm text-zinc-900'>File name</label>
-        <input id='file-name' value={zipFileName} onChange={e => setZipFileName(e.target.value)} placeholder='Assign file name' required
-          className='mt-1 px-2.5 py-1.5 w-full text-sm border border-zinc-200 rounded-md' />
+        <label htmlFor="split-file-upload" className="flex items-center gap-1.5 hover:text-zinc-900 cursor-pointer transition-all duration-300 ease-in-out">
+          {files.length > 0 ?
+            <>
+              <span>you uploaded:</span>
+              <span className="px-2 py-0.5 bg-blue-100 text-blue-600 rounded-md">{files[0].name}</span>
+            </> :
+            <>
+              <span>upload the</span>
+              <span className="px-2 py-0.5 bg-zinc-200/80 rounded-md">document</span>
+            </>
+          }
+        </label>
+        <input
+          id="split-file-upload"
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+      </div>
+
+      <div className="flex items-center gap-1.5">
+        <label htmlFor='file-name' className='whitespace-nowrap'>you can add the</label>
+        <textarea rows={1} id='file-name' value={zipFileName} onChange={e => setZipFileName(e.target.value)} placeholder='Zip file name' required
+          className='px-2 py-1 w-28 bg-zinc-200/80 placeholder:text-zinc-600 text-zinc-900 resize-none rounded-lg' />
       </div>
 
       <div>
