@@ -15,7 +15,7 @@ export default function App() {
         <GlobeIcon className="size-10" />
       </div>
 
-      <Tabs defaultValue="split" className="mt-1.5 w-full max-w-sm rounded-lg">
+      <Tabs defaultValue="split" className="mt-1.5 w-full max-w-md rounded-lg">
         <h1 className="text-xl text-zinc-900 font-medium">hey, what do wanna do?</h1>
 
         <TabsList className="mt-4">
@@ -131,7 +131,7 @@ function SplitPDF() {
     <>
       <form onSubmit={handleSubmit} className="space-y-2.5 text-base text-zinc-600 lowercase">
         <div>
-          <label htmlFor="split-file-upload" className="flex items-center gap-1.5 hover:text-zinc-900 cursor-pointer transition-all duration-300 ease-in-out">
+          <label htmlFor="split-file-upload" className="flex items-baseline gap-1.5 hover:text-zinc-900 cursor-pointer transition-all duration-300 ease-in-out">
             {files.length > 0 ?
               <>
                 <span>you uploaded:</span>
@@ -152,16 +152,16 @@ function SplitPDF() {
           />
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-baseline gap-1.5">
           <label htmlFor='file-name' className='whitespace-nowrap'>you can add the</label>
           <textarea rows={1} id='file-name' value={zipFileName} onChange={e => setZipFileName(e.target.value)} placeholder='Zip file name'
             className='px-2.5 py-1 min-w-28 bg-zinc-200/80 placeholder:text-zinc-600 text-zinc-900 resize-none field-sizing-content outline outline-none rounded-lg' />
-          <p>if you want,</p>
+          <p className='whitespace-nowrap'>if you want,</p>
         </div>
 
-        <p>you can also specify the pages you want split,</p>
+        <p className='whitespace-nowrap'>you can also specify the pages you want split,</p>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-baseline gap-1.5">
           <label htmlFor='upload-file' className="whitespace-nowrap">
             you add the page range here
           </label>
@@ -174,7 +174,7 @@ function SplitPDF() {
             className="px-2.5 py-1 w-22 placeholder:text-zinc-600 text-zinc-900 bg-zinc-200/80 outline outline-none rounded-lg"
           />
         </div>
-        <p>
+        <p className='whitespace-nowrap'>
           leave blank if you want the entire document split
         </p>
 
