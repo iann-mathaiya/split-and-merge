@@ -3,7 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { Upload, FileText, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
-import GlobeIcon from "./components/ui/globe-icon";
+import { GlobeIcon, MergeIcon, ScanIcon, ScissorsIcon } from "./components/icons";
 
 const API_URL = import.meta.env.API_URL || 'http://localhost:3001';
 
@@ -12,17 +12,26 @@ export default function App() {
     <section className='mt-32 mx-auto w-full max-w-screen-lg min-h-screen flex justify-center gap-3'>
 
       <div>
-        <GlobeIcon />
+        <GlobeIcon className="size-10" />
       </div>
 
       <Tabs defaultValue="split" className="mt-1.5 w-full max-w-sm rounded-lg">
         <h1 className="text-xl text-zinc-900 font-medium">hey, what do wanna do?</h1>
 
         <TabsList className="mt-4">
-          <TabsTrigger value="split"> <span>✂</span>  Split</TabsTrigger>
-          <TabsTrigger value="merge"><span>🍯</span> Merge</TabsTrigger>
+          <TabsTrigger value="split">
+            <ScissorsIcon className="w-4 h-4" />
+            Split
+          </TabsTrigger>
+          <TabsTrigger value="merge">
+            <MergeIcon className="w-4 h-4" />
+            Merge
+          </TabsTrigger>
           <p className="text-base text-zinc-600">or</p>
-          <TabsTrigger value="ocr"><span>📜</span>OCR</TabsTrigger>
+          <TabsTrigger value="ocr">
+            <ScanIcon className="w-4 h-4" />
+            OCR
+          </TabsTrigger>
         </TabsList>
 
         <div className='mt-1 p-2 rounded-md'>
