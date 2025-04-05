@@ -89,7 +89,7 @@ function SplitPDF() {
 
     try {
       if (files.length === 0) {
-        throw new Error('Please select at least one PDF file');
+        throw new Error('Please upload at least one PDF file');
       }
 
       if (pageRanges && !validatePageRanges(pageRanges)) {
@@ -128,75 +128,83 @@ function SplitPDF() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2.5 text-base text-zinc-600 lowercase">
-      {/* <div className="border-2 border-dashed border-zinc-300 rounded-lg text-center">
-        <label className="cursor-pointer block p-6">
-          upload the document
+    <>
+      <form onSubmit={handleSubmit} className="space-y-2.5 text-base text-zinc-600 lowercase">
+        <div>
+          <label htmlFor="split-file-upload" className="flex items-center gap-1.5 hover:text-zinc-900 cursor-pointer transition-all duration-300 ease-in-out">
+            {files.length > 0 ?
+              <>
+                <span>you uploaded:</span>
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-600 rounded-md">{files[0].name}</span>
+              </> :
+              <>
+                <span>upload the</span>
+                <span className="px-2 py-0.5 bg-zinc-200/80 rounded-md">document</span>
+              </>
+            }
+          </label>
           <input
+            id="split-file-upload"
             type="file"
             accept="application/pdf"
             onChange={handleFileChange}
             className="hidden"
           />
-          <div className="flex flex-col items-center">
-            <Upload className="w-12 h-12 text-zinc-400 mb-2" />
-            <span className="text-zinc-600">
-              Click to upload a PDF to split
-            </span>
-          </div>
-        </label>
-      </div> */}
+        </div>
 
-      <div>
-        <label htmlFor="split-file-upload" className="flex items-center gap-1.5 hover:text-zinc-900 cursor-pointer transition-all duration-300 ease-in-out">
-          {files.length > 0 ?
-            <>
-              <span>you uploaded:</span>
-              <span className="px-2 py-0.5 bg-blue-100 text-blue-600 rounded-md">{files[0].name}</span>
-            </> :
-            <>
-              <span>upload the</span>
-              <span className="px-2 py-0.5 bg-zinc-200/80 rounded-md">document</span>
-            </>
-          }
-        </label>
-        <input
-          id="split-file-upload"
-          type="file"
-          accept="application/pdf"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-      </div>
+        <div className="flex items-center gap-1.5">
+          <label htmlFor='file-name' className='whitespace-nowrap'>you can add the</label>
+          <textarea rows={1} id='file-name' value={zipFileName} onChange={e => setZipFileName(e.target.value)} placeholder='Zip file name'
+            className='px-2.5 py-1 min-w-28 bg-zinc-200/80 placeholder:text-zinc-600 text-zinc-900 resize-none field-sizing-content outline outline-none rounded-lg' />
+          <p>if you want,</p>
+        </div>
 
-      <div className="flex items-center gap-1.5">
-        <label htmlFor='file-name' className='whitespace-nowrap'>you can add the</label>
-        <textarea rows={1} id='file-name' value={zipFileName} onChange={e => setZipFileName(e.target.value)} placeholder='Zip file name' required
-          className='px-2 py-1 w-28 bg-zinc-200/80 placeholder:text-zinc-600 text-zinc-900 resize-none rounded-lg' />
-      </div>
+        <p>you can also specify the pages you want split,</p>
 
-      <div>
-        <label htmlFor='upload-file' className="block text-sm font-medium text-zinc-700 mb-1">
-          Page Ranges (optional)
-        </label>
-        <input
-          id='upload-file'
-          type="text"
-          placeholder="e.g., 1-3,4-6"
-          value={pageRanges}
-          onChange={(e) => setPageRanges(e.target.value)}
-          className="w-full p-2 border rounded-lg"
-        />
-        <p className="text-xs text-zinc-500 mt-1">
-          Leave empty to split into individual pages
+        <div className="flex items-center gap-1.5">
+          <label htmlFor='upload-file' className="whitespace-nowrap">
+            you add the page range here
+          </label>
+          <input
+            id='upload-file'
+            type="text"
+            placeholder="e.g., 1-3,4-6"
+            value={pageRanges}
+            onChange={(e) => setPageRanges(e.target.value)}
+            className="px-2.5 py-1 w-22 placeholder:text-zinc-600 text-zinc-900 bg-zinc-200/80 outline outline-none rounded-lg"
+          />
+        </div>
+        <p>
+          leave blank if you want the entire document split
         </p>
-      </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-16 flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
+        >
+          {loading ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <>
+              <span>when you're ready go ahead and</span>
+              <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
+                <ScissorsIcon className="w-3.5 h-3.5" />
+                <span>split</span>
+              </div>
+            </>
+          )}
+        </button>
+      </form>
+
 
       {error && (
-        <Alert variant="destructive">
+       <div className="mt-12">
+         <Alert variant="destructive">
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
+       </div>
       )}
 
       {success && (
@@ -209,20 +217,7 @@ function SplitPDF() {
           </div>
         </Alert>
       )}
-
-      <button
-        type="submit"
-        disabled={loading || files.length === 0}
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-zinc-400 flex items-center justify-center"
-      >
-        {loading ? (
-          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-        ) : (
-          <Upload className="w-4 h-4 mr-2" />
-        )}
-        {loading ? 'Processing...' : 'Split PDF'}
-      </button>
-    </form>
+    </>
   );
 }
 
