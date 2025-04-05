@@ -13,7 +13,10 @@ export default function App() {
 
       {/* <h1 className='text-2xl text-zinc-950 font-semibold text-start'>Split & Merge then OCR</h1> */}
 
-
+      <div className="flex items-center gap-2">
+        <GlobeIcon />
+        <h1 className="text-lg text-zinc-900">hey, what do wanna do?</h1>
+      </div>
 
       <Tabs defaultValue="split" className="p-1 mx-auto w-full max-w-sm rounded-lg">
         <TabsList>
