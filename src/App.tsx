@@ -9,22 +9,23 @@ const API_URL = import.meta.env.API_URL || 'http://localhost:3001';
 
 export default function App() {
   return (
-    <section className='mx-auto w-full max-w-screen-lg min-h-screen flex flex-col items-center justify-center gap-4'>
+    <section className='mt-32 mx-auto w-full max-w-screen-lg min-h-screen flex justify-center gap-3'>
 
-      {/* <h1 className='text-2xl text-zinc-950 font-semibold text-start'>Split & Merge then OCR</h1> */}
-
-      <div className="flex items-center gap-2">
+      <div>
         <GlobeIcon />
-        <h1 className="text-lg text-zinc-900">hey, what do wanna do?</h1>
       </div>
 
-      <Tabs defaultValue="split" className="p-1 mx-auto w-full max-w-sm rounded-lg">
-        <TabsList>
+      <Tabs defaultValue="split" className="mt-1.5 w-full max-w-sm rounded-lg">
+        <h1 className="text-xl text-zinc-900 font-medium">hey, what do wanna do?</h1>
+
+        <TabsList className="mt-4">
           <TabsTrigger value="split"> <span>✂</span>  Split</TabsTrigger>
           <TabsTrigger value="merge"><span>🍯</span> Merge</TabsTrigger>
+          <p className="text-base text-zinc-600">or</p>
           <TabsTrigger value="ocr"><span>📜</span>OCR</TabsTrigger>
         </TabsList>
-        <div className='mt-1 bg-white p-2 rounded-md'>
+
+        <div className='mt-1 p-2 rounded-md'>
           <TabsContent value="split" className='pt-12'>
             <SplitPDF />
           </TabsContent>
