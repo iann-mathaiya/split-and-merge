@@ -52,6 +52,13 @@ app.post('/split', async (c) => {
     const file = body.pdf as File
     const pageRanges = body.pageRanges as string
 
+    console.log(body)
+
+    return c.json({
+      success: true,
+      message: 'PDF split request received',
+    })
+
     if (!file) {
       return c.json({
         success: false, error: 'No PDF file provided'

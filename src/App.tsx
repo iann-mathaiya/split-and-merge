@@ -4,6 +4,7 @@ import { Upload, FileText, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { GlobeIcon, MergeIcon, ScanIcon, ScissorsIcon } from "./components/icons";
+import { twMerge } from "tailwind-merge";
 
 const API_URL = import.meta.env.API_URL || 'http://localhost:3001';
 
@@ -53,6 +54,7 @@ export default function App() {
 function SplitPDF() {
   const [files, setFiles] = useState<File[]>([]);
   const [pageRanges, setPageRanges] = useState('');
+  const [mergeAfterwards, setMergeAfterwards] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -99,10 +101,7 @@ function SplitPDF() {
       const formData = new FormData();
 
       formData.append('pdf', files[0]);
-
-      if (pageRanges) {
-        formData.append('pageRanges', pageRanges);
-      }
+      formData.append('pageRanges', pageRanges || '');
 
       const fileName = files[0].name;
 
@@ -156,19 +155,18 @@ function SplitPDF() {
           <label htmlFor='file-name' className='whitespace-nowrap'>you can add the</label>
           <textarea rows={1} id='file-name' value={zipFileName} onChange={e => setZipFileName(e.target.value)} placeholder='Zip file name'
             className='px-2.5 py-1 min-w-28 bg-zinc-200/80 placeholder:text-zinc-600 text-zinc-900 resize-none field-sizing-content outline outline-none rounded-lg' />
-          <p className='whitespace-nowrap'>if you want,</p>
         </div>
 
-        <p className='whitespace-nowrap'>you can also specify the pages you want split,</p>
+        <p className='whitespace-nowrap'>if you want, specify the pages you want split</p>
 
         <div className="flex items-baseline gap-1.5">
           <label htmlFor='upload-file' className="whitespace-nowrap">
-            you add the page range here
+            add the page range here
           </label>
           <input
             id='upload-file'
             type="text"
-            placeholder="e.g., 1-3,4-6"
+            placeholder="e.g. 4-6"
             value={pageRanges}
             onChange={(e) => setPageRanges(e.target.value)}
             className="px-2.5 py-1 w-22 placeholder:text-zinc-600 text-zinc-900 bg-zinc-200/80 outline outline-none rounded-lg"
@@ -177,6 +175,47 @@ function SplitPDF() {
         <p className='whitespace-nowrap'>
           leave blank if you want the entire document split
         </p>
+
+        {pageRanges &&
+          <div className="flex flex-col items-baseline gap-1.5">
+            <p className='whitespace-nowrap'>
+              last thing, do you want to split the specified pages
+            </p>
+            <p className='whitespace-nowrap'>
+              then merge them to a unified document?
+            </p>
+
+            <div className="flex items-center gap-2">
+              <label htmlFor="omg-yes" className={twMerge(
+                "px-2.5 py-1 w-fit text-zinc-600 bg-zinc-200/80 cursor-pointer rounded-lg",
+                mergeAfterwards === true && "bg-blue-100 text-blue-600"
+              )}>
+                <input
+                  type="radio"
+                  id="omg-yes"
+                  className="hidden"
+                  checked={mergeAfterwards === true}
+                  onChange={() => setMergeAfterwards(true)}
+                />
+                <span>omg yes</span>
+              </label>
+
+              <label htmlFor="nope" className={twMerge(
+                "px-2.5 py-1 w-fit text-zinc-600 bg-zinc-200/80 cursor-pointer rounded-lg",
+                mergeAfterwards === false && "bg-blue-100 text-blue-600"
+              )}>
+                <input
+                  id="nope"
+                  type="radio"
+                  className="hidden"
+                  checked={mergeAfterwards === false}
+                  onChange={() => setMergeAfterwards(false)}
+                />
+                <span>nope</span>
+              </label>
+            </div>
+          </div>
+        }
 
         <button
           type="submit"
