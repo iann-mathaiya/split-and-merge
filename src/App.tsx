@@ -54,7 +54,7 @@ export default function App() {
 function SplitPDF() {
   const [files, setFiles] = useState<File[]>([]);
   const [pageRanges, setPageRanges] = useState('');
-  const [mergeAfterwards, setMergeAfterwards] = useState(false);
+  const [canMergeAfterwards, setCanMergeAfterwards] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -101,7 +101,11 @@ function SplitPDF() {
       const formData = new FormData();
 
       formData.append('pdf', files[0]);
-      formData.append('pageRanges', pageRanges || '');
+      if (pageRanges) {
+        formData.append('pageRanges', pageRanges);
+      }
+      formData.append('zipFileName', zipFileName);
+      formData.append('canMergeAfterwards', canMergeAfterwards.toString());
 
       const fileName = files[0].name;
 
@@ -118,6 +122,9 @@ function SplitPDF() {
       setSuccess(`${fileName} split successfully!`);
       setFiles([]);
       setPageRanges('');
+      setZipFileName('');
+      setCanMergeAfterwards(false);
+      setError('');
 
     } catch (err) {
       setError(err.message || 'An error occurred');
@@ -188,28 +195,28 @@ function SplitPDF() {
             <div className="flex items-center gap-2">
               <label htmlFor="omg-yes" className={twMerge(
                 "px-2.5 py-1 w-fit text-zinc-600 bg-zinc-200/80 cursor-pointer rounded-lg",
-                mergeAfterwards === true && "bg-blue-100 text-blue-600"
+                canMergeAfterwards === true && "bg-blue-100 text-blue-600"
               )}>
                 <input
                   type="radio"
                   id="omg-yes"
                   className="hidden"
-                  checked={mergeAfterwards === true}
-                  onChange={() => setMergeAfterwards(true)}
+                  checked={canMergeAfterwards === true}
+                  onChange={() => setCanMergeAfterwards(true)}
                 />
                 <span>omg yes</span>
               </label>
 
               <label htmlFor="nope" className={twMerge(
                 "px-2.5 py-1 w-fit text-zinc-600 bg-zinc-200/80 cursor-pointer rounded-lg",
-                mergeAfterwards === false && "bg-blue-100 text-blue-600"
+                canMergeAfterwards === false && "bg-blue-100 text-blue-600"
               )}>
                 <input
                   id="nope"
                   type="radio"
                   className="hidden"
-                  checked={mergeAfterwards === false}
-                  onChange={() => setMergeAfterwards(false)}
+                  checked={canMergeAfterwards === false}
+                  onChange={() => setCanMergeAfterwards(false)}
                 />
                 <span>nope</span>
               </label>
