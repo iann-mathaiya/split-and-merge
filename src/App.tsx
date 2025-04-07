@@ -338,27 +338,28 @@ function MergePDFs() {
 
   return (
     <>
-
       <form onSubmit={handleSubmit} className="space-y-2.5 text-base text-zinc-600 lowercase">
-        <div className="border-2 border-dashed border-zinc-300 rounded-lg text-center">
-          <label className="cursor-pointer block p-6">
-            <input
-              type="file"
-              accept="application/pdf"
-              multiple
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            <div className="flex flex-col items-center">
-              <Upload className="w-12 h-12 text-zinc-400 mb-2" />
-              <span className="text-zinc-600">
-                Click to upload multiple PDFs to merge
-              </span>
-              <span className="text-sm text-zinc-500 mt-1">
-                You can select multiple files
-              </span>
-            </div>
+        <div>
+          <label htmlFor="merge-file-upload" className="flex items-baseline gap-1.5 hover:text-zinc-900 cursor-pointer transition-all duration-300 ease-in-out">
+            {files.length > 0 ?
+              <>
+                <span>you uploaded:</span>
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-600 rounded-md">{files.length} pdf documents</span>
+              </> :
+              <>
+                <span>upload the</span>
+                <span className="px-2 py-0.5 bg-zinc-200/80 rounded-md">document</span>
+              </>
+            }
           </label>
+          <input
+            id="merge-file-upload"
+            type="file"
+            multiple
+            accept="application/pdf"
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
 
         <div className="flex items-baseline gap-1.5">
@@ -366,6 +367,20 @@ function MergePDFs() {
           <textarea rows={1} id='file-name' value={mergedDocFileName} onChange={e => setMergedDocFileName(e.target.value)} placeholder='File name'
             className='px-2.5 py-1 min-w-20 bg-zinc-200/80 placeholder:text-zinc-600 text-zinc-900 resize-none field-sizing-content outline outline-none rounded-lg' />
         </div>
+
+        {files.length > 0 && (
+        <div className="mt-8 space-y-1.5">
+          <h3 className="text-sm text-blue-600 italic font-medium">pdfs you've already uploaded</h3>
+          <ul className="space-y-2">
+            {files.map((file) => (
+              <li key={file.name} className="flex items-center text-sm">
+                <FileText className="w-4 h-4 mr-2 text-zinc-500" />
+                {file.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
         <button
           type="submit"
@@ -390,20 +405,6 @@ function MergePDFs() {
           )}
         </button>
       </form>
-
-      {files.length > 0 && (
-        <div className="bg-zinc-50 p-4 rounded-lg">
-          <h3 className="font-medium mb-2">Selected Files:</h3>
-          <ul className="space-y-2">
-            {files.map((file) => (
-              <li key={file.name} className="flex items-center text-sm">
-                <FileText className="w-4 h-4 mr-2 text-zinc-500" />
-                {file.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {error && (
         <Alert variant="destructive">
