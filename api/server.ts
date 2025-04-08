@@ -51,18 +51,10 @@ app.post('/split', async (c) => {
     const body = await c.req.parseBody();
     const file = body.pdf as File;
     const pageRanges = body.pageRanges as string;
-    const fileName = body.zipFileName as string
-    // const canMergeAfterwards = Boolean(body.canMergeAfterwards)
+    const fileName = body.zipFileName as string;
 
     console.log("file data:", file);
     console.log("page ranges:", pageRanges);
-    // console.log("zip file name:", fileName)
-    // console.log("can merge afterwards:", canMergeAfterwards)
-
-    // return c.json({
-    //   success: true,
-    //   message: 'PDF split request received',
-    // })
 
     if (!file) {
       return c.json({
@@ -80,10 +72,10 @@ app.post('/split', async (c) => {
     if (pageRanges) {
       ranges = pageRanges.split(',').map(range => {
         const [startStr, endStr] = range.split('-');
-        const start = parseInt(startStr) - 1;
-        const end = endStr ? parseInt(endStr) - 1 : start;
+        const start = Number.parseInt(startStr) - 1;
+        const end = endStr ? Number.parseInt(endStr) - 1 : start;
 
-        if (isNaN(start) || isNaN(end) || start < 0 || end >= totalPages || start > end) {
+        if (Number.isNaN(start) || Number.isNaN(end) || start < 0 || end >= totalPages || start > end) {
           throw new Error(`Invalid page range: ${range}`);
         }
 
