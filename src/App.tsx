@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import type { ChangeEvent, FormEvent } from 'react';
+import { twMerge } from "tailwind-merge";
 import { FileText, Loader2 } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
+import type { ChangeEvent, FormEvent } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { GlobeIcon, MergeIcon, ScanIcon, ScissorsIcon } from "./components/icons";
-import { twMerge } from "tailwind-merge";
 
 const API_URL = import.meta.env.API_URL || 'http://localhost:3001';
 
