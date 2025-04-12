@@ -129,7 +129,11 @@ function SplitPDF() {
       setError('');
 
     } catch (err) {
-      setError(err.message || 'An error occurred');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -261,10 +265,9 @@ function SplitPDF() {
         <div className="mt-8">
           <p className="text-sm text-green-700">{success}</p>
 
-          <div className='mt-3'>
-            <a href={downloadLink} download={zipFileName} className='text-sm px-4 py-2 bg-green-800 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-full transition-all duration-500 ease-in-out'>
-              Download Zip File</a>
-          </div>
+          <a href={downloadLink} download={zipFileName} className='mt-3 text-sm px-4 py-2 bg-green-800 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-full transition-all duration-500 ease-in-out'>
+            Download Zip File
+          </a>
         </div>
       )}
     </>
@@ -365,18 +368,18 @@ function MergePDFs() {
         </div>
 
         {files.length > 0 && (
-        <div className="mt-8 space-y-1.5">
-          <h3 className="text-sm text-blue-600 italic font-medium">pdfs you've already uploaded</h3>
-          <ul className="space-y-2">
-            {files.map((file) => (
-              <li key={file.name} className="flex items-center text-sm">
-                <FileText className="w-4 h-4 mr-2 text-zinc-500" />
-                {file.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+          <div className="mt-8 space-y-1.5">
+            <h3 className="text-sm text-blue-600 italic font-medium">pdfs you've already uploaded</h3>
+            <ul className="space-y-2">
+              {files.map((file) => (
+                <li key={file.name} className="flex items-center text-sm">
+                  <FileText className="w-4 h-4 mr-2 text-zinc-500" />
+                  {file.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <button
           type="submit"
