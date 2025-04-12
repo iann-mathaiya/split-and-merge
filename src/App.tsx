@@ -329,7 +329,11 @@ function MergePDFs() {
       setFiles([]);
 
     } catch (err) {
-      setError(err.message || 'An error occurred');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -383,7 +387,7 @@ function MergePDFs() {
 
         <button
           type="submit"
-          disabled={loading || (files.length === 0 && mergedDocFileName === "")}
+          disabled={loading}
           className="mt-16 flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
         >
           {loading ? (
@@ -415,7 +419,7 @@ function MergePDFs() {
         <div className="mt-8 space-y-2.5">
           <p className="text-sm text-green-700">{success}</p>
 
-          <a href={downloadLink} download={mergedDocFileName} className='mt-4 text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
+          <a href={downloadLink} download={mergedDocFileName} className='mt-4 text-sm px-4 py-2 bg-green-800 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-full transition-all duration-500 ease-in-out'>
             Download Zip File
           </a>
         </div>
