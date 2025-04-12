@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import { Upload, FileText, Loader2 } from 'lucide-react';
+import { FileText, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { GlobeIcon, MergeIcon, ScanIcon, ScissorsIcon } from "./components/icons";
@@ -253,23 +253,20 @@ function SplitPDF() {
 
 
       {error && (
-        <div className="mt-12">
-          <Alert variant="destructive">
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
+        <div className="mt-8">
+          <p className="text-sm text-red-500">{error}</p>
         </div>
       )}
 
       {success && (
-        <Alert className="bg-green-50 text-green-900 border-green-200">
-          <AlertTitle>Success</AlertTitle>
-          <AlertDescription>{success}</AlertDescription>
-          <div className='pt-4'>
-            <a href={downloadLink} download={zipFileName} className='text-sm px-4 py-2 bg-green-900 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-lg transition-all duration-500 ease-in-out'>
+        <div className="mt-8">
+          <p className="text-sm text-green-700">{success}</p>
+
+          <div className='mt-3'>
+            <a href={downloadLink} download={zipFileName} className='text-sm px-4 py-2 bg-green-800 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-full transition-all duration-500 ease-in-out'>
               Download Zip File</a>
           </div>
-        </Alert>
+        </div>
       )}
     </>
   );
