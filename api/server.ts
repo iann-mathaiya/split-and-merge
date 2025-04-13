@@ -123,7 +123,6 @@ app.post('/split', async (c) => {
   }
 });
 
-
 // Merge PDFs endpoint
 app.post('/merge', async (c) => {
   try {
@@ -156,6 +155,19 @@ app.post('/merge', async (c) => {
       }
     });
 
+  } catch (error) {
+    return c.json({ error: error.message }, 500);
+  }
+});
+
+// OCR endpoint
+app.post('/ocr', async (c) => {
+  try {
+    const body = await c.req.parseBody();
+    const file = body.pdf as File;
+
+    console.log(file)
+    
   } catch (error) {
     return c.json({ error: error.message }, 500);
   }

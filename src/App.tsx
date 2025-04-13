@@ -433,6 +433,7 @@ function OCR() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [downloadLink, setDownloadLink] = useState('');
+  const [markdownFileName, setMarkdownFileName] = useState('');
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
