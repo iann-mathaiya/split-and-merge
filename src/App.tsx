@@ -538,6 +538,22 @@ function OCR() {
           )}
         </button>
       </form>
+
+      {error && (
+        <div className="mt-8">
+          <p className="text-sm text-red-500">{error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="mt-8 space-y-2.5">
+          <p className="text-sm text-green-700">{success}</p>
+
+          <a href={downloadLink} download={markdownFileName} className='mt-3 text-sm px-4 py-2 bg-green-800 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-900 rounded-full transition-all duration-500 ease-in-out'>
+            Download Markdown File
+          </a>
+        </div>
+      )}
     </>
   );
 }
