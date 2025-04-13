@@ -432,6 +432,7 @@ function OCR() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [downloadLink, setDownloadLink] = useState('');
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
@@ -449,9 +450,47 @@ function OCR() {
     setSuccess('');
   };
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
+    try {
+      if (files.length === 0) {
+        throw new Error('Please upload at least one PDF file');
+      }
+
+      const formData = new FormData();
+
+      formData.append('pdf', files[0]);
+
+      const response = await fetch(`${API_URL}/ocr`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const reponseData = await response.blob();
+
+      const url = window.URL.createObjectURL(reponseData);
+      setDownloadLink(url);
+      setSuccess('OCR completed successfully');
+      setFiles([]);
+
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An error occurred');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
-      <form action="" className="space-y-2.5 text-base text-zinc-600 lowercase">
+      <form onSubmit={handleSubmit} className="space-y-2.5 text-base text-zinc-600 lowercase">
         <div>
           <label htmlFor="split-file-upload" className="flex items-baseline gap-1.5 hover:text-zinc-900 cursor-pointer transition-all duration-300 ease-in-out">
             {files.length > 0 ?
@@ -462,6 +501,7 @@ function OCR() {
               <>
                 <span>upload the</span>
                 <span className="px-2 py-0.5 bg-zinc-200/80 rounded-md">document</span>
+                <span>you wanna ocr</span>
               </>
             }
           </label>
