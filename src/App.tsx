@@ -233,7 +233,7 @@ function SplitPDF() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-16 flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
+          className="mt-16 group flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
         >
           {loading ? (
             <>
@@ -245,7 +245,7 @@ function SplitPDF() {
           ) : (
             <>
               <span>when you're ready go ahead and</span>
-              <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
+              <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 group-hover:bg-blue-600  rounded-full transition-all duration-300 ease-in-out">
                 <ScissorsIcon className="w-3.5 h-3.5 text-whte" aria-hidden />
                 <span>split</span>
               </div>
@@ -387,19 +387,19 @@ function MergePDFs() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-16 flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
+          className="mt-16 group flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
         >
           {loading ? (
             <>
               <span>splitting {files[0]?.name}</span>
-              <div className="p-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
+              <div className="p-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full transition-all duration-300 ease-in-out">
                 <Loader2 className="w-4 h-4 text-whte animate-spin" aria-hidden />
               </div>
             </>
           ) : (
             <>
               <span>when you're ready go ahead and</span>
-              <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
+              <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 group-hover:bg-blue-600 rounded-full transition-all duration-300 ease-in-out">
                 <MergeIcon className="w-3.5 h-3.5 text-whte" aria-hidden />
                 <span>merge</span>
               </div>
@@ -518,7 +518,7 @@ function OCR() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-16 flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
+          className="mt-16 group flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
         >
           {loading ? (
             <>
@@ -530,7 +530,7 @@ function OCR() {
           ) : (
             <>
               <span>when you're ready go ahead and</span>
-              <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
+              <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 group-hover:bg-blue-600 rounded-full transition-all duration-300 ease-in-out">
                 <ScanIcon className="w-3.5 h-3.5 text-whte" aria-hidden />
                 <span>ocr</span>
               </div>
