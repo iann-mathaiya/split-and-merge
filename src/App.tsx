@@ -15,7 +15,7 @@ export default function App() {
         <GlobeIcon className="size-10" />
       </div>
 
-      <Tabs defaultValue="split" className="mt-1.5 w-full max-w-md rounded-lg">
+      <Tabs defaultValue="ocr" className="mt-1.5 w-full max-w-md rounded-lg">
         <h1 className="text-xl text-zinc-900 font-medium">hey, what do wanna do?</h1>
 
         <TabsList className="mt-4">
@@ -41,8 +41,8 @@ export default function App() {
           <TabsContent value="merge" className='pt-12'>
             <MergePDFs />
           </TabsContent>
-          <TabsContent value="ocr">
-            Todo
+          <TabsContent value="ocr" className='pt-12'>
+            <OCR />
           </TabsContent>
         </div>
       </Tabs>
@@ -254,7 +254,6 @@ function SplitPDF() {
         </button>
       </form>
 
-
       {error && (
         <div className="mt-8">
           <p className="text-sm text-red-500">{error}</p>
@@ -424,6 +423,80 @@ function MergePDFs() {
           </a>
         </div>
       )}
+    </>
+  );
+}
+
+function OCR() {
+  const [files, setFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    const invalidFiles = selectedFiles.filter(
+      file => file.type !== 'application/pdf'
+    );
+
+    if (invalidFiles.length > 0) {
+      setError('Please upload PDF files only');
+      return;
+    }
+
+    setFiles(selectedFiles);
+    setError('');
+    setSuccess('');
+  };
+
+  return (
+    <>
+      <form action="" className="space-y-2.5 text-base text-zinc-600 lowercase">
+        <div>
+          <label htmlFor="split-file-upload" className="flex items-baseline gap-1.5 hover:text-zinc-900 cursor-pointer transition-all duration-300 ease-in-out">
+            {files.length > 0 ?
+              <>
+                <span>you uploaded:</span>
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-600 rounded-md">{files[0].name}</span>
+              </> :
+              <>
+                <span>upload the</span>
+                <span className="px-2 py-0.5 bg-zinc-200/80 rounded-md">document</span>
+              </>
+            }
+          </label>
+          <input
+            id="split-file-upload"
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-16 flex items-center gap-2 font-normal cursor-pointer hover:text-zinc-900"
+        >
+          {loading ? (
+            <>
+              <span>splitting {files[0]?.name}</span>
+              <div className="p-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
+                <Loader2 className="w-4 h-4 text-whte animate-spin" aria-hidden />
+              </div>
+            </>
+          ) : (
+            <>
+              <span>when you're ready go ahead and</span>
+              <div className="px-3 py-1 flex items-center gap-1 text-white bg-zinc-900 rounded-full">
+                <ScanIcon className="w-3.5 h-3.5 text-whte" aria-hidden />
+                <span>ocr</span>
+              </div>
+            </>
+          )}
+        </button>
+      </form>
     </>
   );
 }
