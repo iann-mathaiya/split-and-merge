@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import JSZip from 'jszip';
 import multer from 'multer';
 import { Hono } from 'hono';
@@ -6,10 +7,13 @@ import { logger } from 'hono/logger';
 import { PDFDocument } from 'pdf-lib';
 import { serve } from '@hono/node-server';
 import type { Context, Next } from 'hono';
+import { Mistral } from '@mistralai/mistralai';
 import type { HTTPResponseError } from 'hono/types';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 const app = new Hono();
+
+const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY });
 
 const upload = multer({
   dest: 'uploads/',
@@ -24,18 +28,18 @@ const handleUpload = upload.fields([
 ]);
 
 // Convert multer middleware to Hono middleware
-const uploadMiddleware = async (c: Context, next: Next) => {
+// const uploadMiddleware = async (c: Context, next: Next) => {
 
-  const req = c.req.raw as unknown as IncomingMessage;
-  const res = c.res as unknown as ServerResponse;
+//   const req = c.req.raw as unknown as IncomingMessage;
+//   const res = c.res as unknown as ServerResponse;
 
-  return new Promise((resolve, reject) => {
-    handleUpload(req, res, (err?: HTTPResponseError) => {
-      if (err) reject(err);
-      else resolve(next());
-    });
-  });
-};
+//   return new Promise((resolve, reject) => {
+//     handleUpload(req, res, (err?: HTTPResponseError) => {
+//       if (err) reject(err);
+//       else resolve(next());
+//     });
+//   });
+// };
 
 // Enable CORS
 app.use('/*', cors());
@@ -166,8 +170,22 @@ app.post('/ocr', async (c) => {
     const body = await c.req.parseBody();
     const file = body.pdf as File;
 
-    console.log(file)
+    console.log(file);
+
+    // const uploadedFile = fs.readFileSync('uploaded_file.pdf');
     
+    const uploadedPdf = await mistral.files.upload({
+      file: {
+        fileName: file.name,
+        content: file,
+      },
+      purpose: "ocr"
+    });
+
+    const retrievedFile = await mistral.files.retrieve({
+      fileId: uploadedPdf.id
+  });
+
   } catch (error) {
     return c.json({ error: error.message }, 500);
   }
