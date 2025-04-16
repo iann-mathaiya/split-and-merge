@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import JSZip from 'jszip';
 import multer from 'multer';
 import { Hono } from 'hono';
@@ -6,10 +5,7 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { PDFDocument } from 'pdf-lib';
 import { serve } from '@hono/node-server';
-import type { Context, Next } from 'hono';
 import { Mistral } from '@mistralai/mistralai';
-import type { HTTPResponseError } from 'hono/types';
-import type { IncomingMessage, ServerResponse } from 'node:http';
 
 const app = new Hono();
 
@@ -173,7 +169,7 @@ app.post('/ocr', async (c) => {
     console.log(file);
 
     // const uploadedFile = fs.readFileSync('uploaded_file.pdf');
-    
+
     const uploadedPdf = await mistral.files.upload({
       file: {
         fileName: file.name,
@@ -182,9 +178,17 @@ app.post('/ocr', async (c) => {
       purpose: "ocr"
     });
 
-    const retrievedFile = await mistral.files.retrieve({
-      fileId: uploadedPdf.id
-  });
+    const signedUrl = await mistral.files.getSignedUrl({
+      fileId: uploadedPdf.id,
+    });
+
+    const ocrResponse = await mistral.ocr.process({
+      model: "mistral-ocr-latest",
+      document: {
+        type: "document_url",
+        documentUrl: signedUrl.url,
+      }
+    });
 
   } catch (error) {
     return c.json({ error: error.message }, 500);
