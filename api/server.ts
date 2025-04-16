@@ -187,13 +187,26 @@ app.post('/ocr', async (c) => {
       document: {
         type: "document_url",
         documentUrl: signedUrl.url,
-      }
+      },
+      includeImageBase64: true
     });
 
-    return new Response(ocrResponse.pages[0].markdown, {
+    // Convert the OCR page objects to a markdown string
+    // const markdownContent = ocrResponse.pages
+    //   .map((page, index) => `## Page ${index + 1}\n\n${page.markdown}`)
+    //   .join('\n\n');
+
+    // return new Response(markdownContent, {
+    //   headers: {
+    //     'Content-Type': 'text/markdown',
+    //     'Content-Disposition': `attachment; filename="${uploadedPdf.filename || 'ocr_results.md'}"`
+    //   }
+    // });
+
+    return new Response(JSON.stringify(ocrResponse.pages), {
       headers: {
-        'Content-Type': 'text/markdown',
-        'Content-Disposition': `attachment; filename="${uploadedPdf.filename || 'ocr_results.md'}"`
+        'Content-Type': 'application/json',
+        'Content-Disposition': `attachment; filename="${uploadedPdf.filename || 'ocr_results.json'}"`
       }
     });
 
