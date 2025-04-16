@@ -112,7 +112,7 @@ app.post('/split', async (c) => {
     return new Response(zipContent, {
       headers: {
         'Content-Type': 'application/zip',
-        'Content-Disposition': 'attachment; filename="split_pdfs.zip"'
+        'Content-Disposition': `attachment; filename="${`${fileName}.zip` || 'split_pdfs.zip'}"`
       }
     });
   } catch (error) {
@@ -187,6 +187,13 @@ app.post('/ocr', async (c) => {
       document: {
         type: "document_url",
         documentUrl: signedUrl.url,
+      }
+    });
+
+    return new Response(ocrResponse.pages[0].markdown, {
+      headers: {
+        'Content-Type': 'text/markdown',
+        'Content-Disposition': `attachment; filename="${uploadedPdf.filename || 'ocr_results.md'}"`
       }
     });
 
