@@ -1,5 +1,4 @@
 import JSZip from 'jszip';
-import multer from 'multer';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
@@ -10,32 +9,6 @@ import { Mistral } from '@mistralai/mistralai';
 const app = new Hono();
 
 const mistral = new Mistral({ apiKey: process.env.MISTRAL_API_KEY });
-
-const upload = multer({
-  dest: 'uploads/',
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
-});
-
-// Middleware to handle file uploads
-const handleUpload = upload.fields([
-  { name: 'pdf', maxCount: 1 },
-  { name: 'pdfs', maxCount: 20 }
-]);
-
-// Convert multer middleware to Hono middleware
-// const uploadMiddleware = async (c: Context, next: Next) => {
-
-//   const req = c.req.raw as unknown as IncomingMessage;
-//   const res = c.res as unknown as ServerResponse;
-
-//   return new Promise((resolve, reject) => {
-//     handleUpload(req, res, (err?: HTTPResponseError) => {
-//       if (err) reject(err);
-//       else resolve(next());
-//     });
-//   });
-// };
 
 // Enable CORS
 app.use('/*', cors());
@@ -165,10 +138,6 @@ app.post('/ocr', async (c) => {
   try {
     const body = await c.req.parseBody();
     const file = body.pdf as File;
-
-    console.log(file);
-
-    // const uploadedFile = fs.readFileSync('uploaded_file.pdf');
 
     const uploadedPdf = await mistral.files.upload({
       file: {
