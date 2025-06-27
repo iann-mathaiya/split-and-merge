@@ -1,4 +1,4 @@
-#SMO (Split, Merge, OCR)
+# SMO (Split, Merge, OCR)
 
 ## Split and Merge
 Split and Merge is a React and Hono app that splits the pages of a PDF document into a dedicated file OR merges PDF documents into a single document.
