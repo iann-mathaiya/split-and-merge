@@ -3,4 +3,4 @@ Split and Merge is a Hono and Node Js app that splits the pages of a pdf documen
 
 ## Tech Stack
 - React + TailwindCSS
-- Hono + Node
+- Hono
